@@ -5,6 +5,10 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  schedule:
+    # Runs at 9:00 AM UTC every Monday and Thursday
+    - cron: '0 9 * * 1,4'
+  workflow_dispatch:  # lets you manually trigger a run from the Actions tab, for testing
 
 jobs:
   test:

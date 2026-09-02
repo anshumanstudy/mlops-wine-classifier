@@ -1,3 +1,4 @@
+import numpy as np
 from train import load_data, train_model, evaluate
 
 
@@ -6,6 +7,24 @@ def test_load_data_shapes():
     X_train, X_test, y_train, y_test = load_data()
     assert X_train.shape[1] == 13  # wine dataset always has 13 features
     assert len(y_train) == X_train.shape[0]
+
+
+def test_data_no_missing_values():
+    """Data validation: catches upstream data quality issues before they
+    corrupt training. In production this is the check that catches a broken
+    upstream feed before it silently trains a bad model."""
+    X_train, X_test, y_train, y_test = load_data()
+    assert not np.isnan(X_train).any()
+    assert not np.isnan(X_test).any()
+
+
+def test_data_within_expected_ranges():
+    """Data validation: flags incoming data that looks wildly different from
+    what the model was trained on -- an early, cheap drift signal, checked
+    before the model even runs."""
+    X_train, X_test, y_train, y_test = load_data()
+    assert X_train.min() >= 0        # no negative values expected in this dataset
+    assert X_train.max() < 2000      # sanity bound based on known feature scale (proline maxes ~1680)
 
 
 def test_model_trains_without_error():
