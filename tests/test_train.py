@@ -24,7 +24,7 @@ def test_data_within_expected_ranges():
     before the model even runs."""
     X_train, X_test, y_train, y_test = load_data()
     assert X_train.min() >= 0        # no negative values expected in this dataset
-    assert X_train.max() < 2000      # sanity bound based on known feature scale (proline maxes ~1680)
+    assert X_train.max() < 2000      # sanity bound (proline feature maxes ~1680)
 
 
 def test_model_trains_without_error():
